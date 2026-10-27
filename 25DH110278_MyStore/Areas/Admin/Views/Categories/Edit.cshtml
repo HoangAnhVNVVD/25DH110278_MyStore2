@@ -1,0 +1,23 @@
+﻿﻿@model _25DH110278_MyStore.Models.Category
+
+@{
+    ViewBag.Title = "Cập nhật danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">CẬP NHẬT DANH MỤC</h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.CategoryID)
+                @Html.Partial("PVCreateEditCategory", Model)
+            </div>
+        }
+    </div>
+</div>

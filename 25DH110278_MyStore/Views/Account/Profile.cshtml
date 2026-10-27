@@ -1,0 +1,63 @@
+﻿﻿@model _25DH110278_MyStore.Models.Customer
+
+@{
+    ViewBag.Title = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row" style="margin-top: 25px;">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-info" style="border-radius: 8px;">
+            <div class="panel-heading" style="font-size: 18px; font-weight: bold;">
+                THÔNG TIN CÁ NHÂN
+            </div>
+            <div class="panel-body" style="padding: 25px;">
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-success">@ViewBag.Message</div>
+                }
+
+                @using (Html.BeginForm("Profile", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(m => m.CustomerID)
+                    @Html.HiddenFor(m => m.Username)
+
+                    <div class="form-group">
+                        <label>Tài khoản</label>
+                        <input type="text" class="form-control" value="@Model.Username" disabled="disabled" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Họ và tên (*)</label>
+                        @Html.EditorFor(m => m.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label>Số điện thoại (*)</label>
+                        @Html.EditorFor(m => m.CustomerPhone, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.CustomerPhone, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email (*)</label>
+                        @Html.EditorFor(m => m.CustomerEmail, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.CustomerEmail, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ nhận hàng (*)</label>
+                        @Html.EditorFor(m => m.CustomerAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.CustomerAddress, "", new { @class = "text-danger" })
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        LƯU CẬP NHẬT
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿﻿@model _25DH110278_MyStore.Models.Order
+
+@{
+    ViewBag.Title = "Đặt hàng thành công";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel panel-success text-center" style="border-radius: 8px; margin-top: 30px; padding: 30px;">
+    <div style="font-size: 60px; color: #5cb85c;">
+        <i class="glyphicon glyphicon-ok-circle"></i>
+    </div>
+    <h2 style="color: #27ae60; font-weight: bold; margin-top: 10px;">ĐẶT HÀNG THÀNH CÔNG!</h2>
+    <p style="font-size: 16px; color: #555;">
+        Cảm ơn quý khách đã mua sắm tại <strong>MyStore</strong>. Mã đơn hàng của bạn là: <strong class="text-danger">#@Model.OrderID</strong>
+    </p>
+
+    <div class="row text-left" style="max-width: 600px; margin: 30px auto; background: #fafafa; border: 1px solid #eee; padding: 20px; border-radius: 6px;">
+        <dl class="dl-horizontal" style="margin-bottom: 0;">
+            <dt>Người nhận</dt>
+            <dd>@(Model.Customer != null ? Model.Customer.CustomerName : "N/A")</dd>
+
+            <dt>Số điện thoại</dt>
+            <dd>@(Model.Customer != null ? Model.Customer.CustomerPhone : "N/A")</dd>
+
+            <dt>Địa chỉ giao</dt>
+            <dd>@Model.AddressDelivery</dd>
+
+            <dt>Ngày đặt</dt>
+            <dd>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt>Tổng thanh toán</dt>
+            <dd><strong class="text-danger" style="font-size: 16px;">@Model.TotalAmount.ToString("N0") VNĐ</strong></dd>
+
+            <dt>Trạng thái</dt>
+            <dd><span class="label label-warning">@Model.PaymentStatus</span></dd>
+        </dl>
+    </div>
+
+    <p>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg">
+            Tiếp tục mua hàng
+        </a>
+    </p>
+</div>

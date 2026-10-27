@@ -1,0 +1,32 @@
+﻿﻿@model _25DH110278_MyStore.Models.Product
+
+<div class="row">
+    <div class="col-md-4 text-center">
+        @if (!string.IsNullOrEmpty(Model.ProductImage))
+        {
+            <img src="@Url.Content(Model.ProductImage)" alt="@Model.ProductName" class="img-responsive img-thumbnail" style="max-height: 250px;" />
+        }
+        else
+        {
+            <img src="@Url.Content("~/Content/images/default_img.png")" alt="Ảnh mặc định" class="img-responsive img-thumbnail" style="max-height: 250px;" />
+        }
+    </div>
+    <div class="col-md-8">
+        <dl class="dl-horizontal">
+            <dt>Mã sản phẩm</dt>
+            <dd>@Model.ProductID</dd>
+
+            <dt>Tên sản phẩm</dt>
+            <dd><strong>@Model.ProductName</strong></dd>
+
+            <dt>Danh mục</dt>
+            <dd><span class="label label-info">@(Model.Category != null ? Model.Category.CategoryName : "Chưa phân loại")</span></dd>
+
+            <dt>Đơn giá</dt>
+            <dd><strong class="text-danger" style="font-size: 16px;">@Model.ProductPrice.ToString("N0") VNĐ</strong></dd>
+
+            <dt>Mô tả chi tiết</dt>
+            <dd style="white-space: pre-line;">@Model.ProductDescription</dd>
+        </dl>
+    </div>
+</div>

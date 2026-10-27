@@ -1,0 +1,165 @@
+﻿﻿@{
+    ViewBag.Title = "Bảng điều khiển Quản trị";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var categoryStats = ViewBag.CategoryStats as IEnumerable<dynamic>;
+    var recentOrders = ViewBag.RecentOrders as IEnumerable<_25DH110278_MyStore.Models.Order>;
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h2 class="page-header" style="margin-top: 10px; font-weight: bold; color: #2c3e50;">
+            BẢNG ĐIỀU KHIỂN QUẢN TRỊ (DASHBOARD)
+        </h2>
+    </div>
+</div>
+
+<div class="row" style="margin-bottom: 25px;">
+    <div class="col-md-3 col-sm-6">
+        <div class="panel panel-primary text-center">
+            <div class="panel-heading" style="padding: 20px 10px;">
+                <div style="font-size: 32px; font-weight: bold;">@ViewBag.TotalProducts</div>
+                <div style="font-size: 15px;">Sản phẩm đang kinh doanh</div>
+            </div>
+            <div class="panel-footer">
+                @Html.ActionLink("Quản lý sản phẩm →", "Index", "Products", null, new { @class = "text-primary", style = "font-weight: bold;" })
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <div class="panel panel-info text-center">
+            <div class="panel-heading" style="padding: 20px 10px;">
+                <div style="font-size: 32px; font-weight: bold;">@ViewBag.TotalCategories</div>
+                <div style="font-size: 15px;">Danh mục sản phẩm</div>
+            </div>
+            <div class="panel-footer">
+                @Html.ActionLink("Quản lý danh mục →", "Index", "Categories", null, new { @class = "text-info", style = "font-weight: bold;" })
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <div class="panel panel-success text-center">
+            <div class="panel-heading" style="padding: 20px 10px;">
+                <div style="font-size: 32px; font-weight: bold;">@ViewBag.TotalCustomers</div>
+                <div style="font-size: 15px;">Khách hàng đăng ký</div>
+            </div>
+            <div class="panel-footer">
+                @Html.ActionLink("Quản lý khách hàng →", "Index", "Customers", null, new { @class = "text-success", style = "font-weight: bold;" })
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <div class="panel panel-danger text-center">
+            <div class="panel-heading" style="padding: 20px 10px;">
+                <div style="font-size: 26px; font-weight: bold;">@(((decimal)ViewBag.TotalRevenue).ToString("N0")) đ</div>
+                <div style="font-size: 15px;">Tổng doanh thu đơn hàng</div>
+            </div>
+            <div class="panel-footer">
+                @Html.ActionLink("Quản lý đơn hàng →", "Index", "Orders", null, new { @class = "text-danger", style = "font-weight: bold;" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-weight: bold;">
+                    <i class="glyphicon glyphicon-stats"></i> THỐNG KÊ SẢN PHẨM THEO DANH MỤC
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div id="category_chart_div" style="width: 100%; height: 350px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-weight: bold;">
+                    <i class="glyphicon glyphicon-list-alt"></i> CÁC ĐƠN HÀNG GẦN ĐÂY
+                </h3>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped" style="margin-bottom: 0;">
+                        <thead>
+                            <tr class="active">
+                                <th>Mã ĐH</th>
+                                <th>Khách hàng</th>
+                                <th>Ngày đặt</th>
+                                <th style="text-align: right;">Tổng tiền</th>
+                                <th style="text-align: center;">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (recentOrders != null && recentOrders.Any())
+                            {
+                                foreach (var o in recentOrders)
+                                {
+                                    <tr>
+                                        <td><strong>#@o.OrderID</strong></td>
+                                        <td>@(o.Customer != null ? o.Customer.CustomerName : "N/A")</td>
+                                        <td>@o.OrderDate.ToString("dd/MM/yyyy")</td>
+                                        <td style="text-align: right;"><strong class="text-danger">@o.TotalAmount.ToString("N0") đ</strong></td>
+                                        <td style="text-align: center;"><span class="label label-success">@o.PaymentStatus</span></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted" style="padding: 20px;">
+                                        Chưa có đơn hàng nào được ghi nhận.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer text-right">
+                @Html.ActionLink("Xem tất cả đơn hàng →", "Index", "Orders")
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawCategoryChart);
+
+        function drawCategoryChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Danh mục');
+            data.addColumn('number', 'Số lượng sản phẩm');
+
+            data.addRows([
+                @if (categoryStats != null)
+                {
+                    foreach (var item in categoryStats)
+                    {
+                        <text>['@item.Name', @item.Count],</text>
+                    }
+                }
+            ]);
+
+            var options = {
+                title: 'Phân bố sản phẩm theo danh mục',
+                pieHole: 0.4,
+                colors: ['#337ab7', '#5cb85c', '#5bc0de', '#f0ad4e', '#d9534f', '#9b59b6', '#34495e'],
+                chartArea: { width: '90%', height: '80%' },
+                legend: { position: 'bottom' }
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('category_chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+}

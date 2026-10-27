@@ -1,0 +1,22 @@
+﻿﻿@model IEnumerable<_25DH110278_MyStore.Models.Category>
+
+<div class="category-sidebar">
+    <div class="panel-heading" style="font-weight: bold; font-size: 16px; background-color: #f1f2f6; border-bottom: 1px solid #e1e2e6;">
+        <i class="glyphicon glyphicon-th-list"></i> DANH MỤC SẢN PHẨM
+    </div>
+    <div class="list-group" style="margin-bottom: 0;">
+        <a href="@Url.Action("Index", "Home")" class="list-group-item">
+            Tất cả sản phẩm
+        </a>
+        @if (Model != null)
+        {
+            foreach (var cat in Model)
+            {
+                <a href="@Url.Action("ProductList", "Home", new { categoryId = cat.CategoryID })" class="list-group-item">
+                    @cat.CategoryName
+                    <span class="badge">@(cat.Products != null ? cat.Products.Count : 0)</span>
+                </a>
+            }
+        }
+    </div>
+</div>

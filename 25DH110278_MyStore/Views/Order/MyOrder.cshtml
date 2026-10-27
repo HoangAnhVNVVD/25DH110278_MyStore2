@@ -1,0 +1,105 @@
+﻿﻿@model IEnumerable<_25DH110278_MyStore.Models.Order>
+
+@{
+    ViewBag.Title = "Đơn hàng của tôi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string currentStatus = ViewBag.CurrentStatus as string;
+}
+
+<div class="panel panel-default" style="margin-top: 15px; border-radius: 8px;">
+    <div class="panel-heading" style="background-color: #f1f2f6; font-size: 18px; font-weight: bold; color: #2c3e50;">
+        ĐƠN HÀNG CỦA TÔI
+    </div>
+    <div class="panel-body">
+        <ul class="nav nav-tabs" style="margin-bottom: 20px;">
+            <li class="@(string.IsNullOrEmpty(currentStatus) ? "active" : "")">
+                <a href="@Url.Action("MyOrder", "Order")">Tất cả</a>
+            </li>
+            <li class="@(currentStatus == "Chưa thanh toán" ? "active" : "")">
+                <a href="@Url.Action("MyOrder", "Order", new { status = "Chưa thanh toán" })">Chưa thanh toán</a>
+            </li>
+            <li class="@(currentStatus == "Đang xử lý" ? "active" : "")">
+                <a href="@Url.Action("MyOrder", "Order", new { status = "Đang xử lý" })">Đang xử lý</a>
+            </li>
+            <li class="@(currentStatus == "Đang giao hàng" ? "active" : "")">
+                <a href="@Url.Action("MyOrder", "Order", new { status = "Đang giao hàng" })">Đang giao hàng</a>
+            </li>
+            <li class="@(currentStatus == "Đã thanh toán" ? "active" : "")">
+                <a href="@Url.Action("MyOrder", "Order", new { status = "Đã thanh toán" })">Đã thanh toán</a>
+            </li>
+            <li class="@(currentStatus == "Đã hủy" ? "active" : "")">
+                <a href="@Url.Action("MyOrder", "Order", new { status = "Đã hủy" })">Đã hủy</a>
+            </li>
+        </ul>
+
+        <div class="well well-sm">
+            @using (Html.BeginForm("MyOrder", "Order", FormMethod.Get, new { @class = "form-inline" }))
+            {
+                if (!string.IsNullOrEmpty(currentStatus))
+                {
+                    <input type="hidden" name="status" value="@currentStatus" />
+                }
+                <div class="form-group">
+                    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control" placeholder="Tìm theo mã đơn hoặc tên sản phẩm..." style="width: 320px;" />
+                </div>
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <a href="@Url.Action("MyOrder", "Order")" class="btn btn-default">Đặt lại</a>
+            }
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var order in Model)
+            {
+                <div class="panel panel-info" style="margin-bottom: 20px;">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <strong>Mã đơn hàng: #@order.OrderID</strong> - Ngày: @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                Trạng thái: <span class="label label-success">@order.PaymentStatus</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table" style="margin-bottom: 0;">
+                            <thead>
+                                <tr class="active">
+                                    <th>Sản phẩm</th>
+                                    <th style="width: 140px; text-align: right;">Đơn giá</th>
+                                    <th style="width: 100px; text-align: center;">Số lượng</th>
+                                    <th style="width: 160px; text-align: right;">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in order.OrderDetails)
+                                {
+                                    <tr>
+                                        <td>@(item.Product != null ? item.Product.ProductName : "Sản phẩm #" + item.ProductID)</td>
+                                        <td style="text-align: right;">@item.UnitPrice.ToString("N0") đ</td>
+                                        <td style="text-align: center;">@item.Quantity</td>
+                                        <td style="text-align: right;"><strong class="text-danger">@((item.Quantity * item.UnitPrice).ToString("N0")) đ</strong></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" style="text-align: right;"><strong>Tổng thanh toán:</strong></td>
+                                    <td style="text-align: right;"><strong class="text-danger" style="font-size: 16px;">@order.TotalAmount.ToString("N0") VNĐ</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center" style="padding: 40px 20px;">
+                <p class="text-muted" style="font-size: 16px;">Không tìm thấy đơn hàng nào phù hợp.</p>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Mua sắm ngay</a>
+            </div>
+        }
+    </div>
+</div>

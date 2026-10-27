@@ -1,0 +1,86 @@
+﻿﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - QUẢN TRỊ HỆ THỐNG</title>
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        body {
+            padding-top: 70px;
+            background-color: #f8f9fa;
+        }
+        .navbar-inverse {
+            background-color: #2c3e50;
+            border-color: #1a252f;
+        }
+        .navbar-inverse .navbar-brand {
+            color: #ecf0f1;
+            font-weight: bold;
+        }
+        .navbar-inverse .navbar-nav > li > a {
+            color: #bdc3c7;
+        }
+        .navbar-inverse .navbar-nav > li > a:hover,
+        .navbar-inverse .navbar-nav > li > a:focus {
+            color: #ffffff;
+            background-color: #1a252f;
+        }
+        .panel-heading {
+            font-weight: bold;
+        }
+        .table > thead > tr > th {
+            vertical-align: middle;
+        }
+        .img-thumbnail-table {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .pagination-container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("MY STORE ADMIN", "Index", "Home", new { area = "Admin" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Tổng quan", "Index", "Home", new { area = "Admin" }, null)</li>
+                    <li>@Html.ActionLink("Danh mục", "Index", "Categories", new { area = "Admin" }, null)</li>
+                    <li>@Html.ActionLink("Sản phẩm", "Index", "Products", new { area = "Admin" }, null)</li>
+                    <li>@Html.ActionLink("Khách hàng", "Index", "Customers", new { area = "Admin" }, null)</li>
+                    <li>@Html.ActionLink("Đơn hàng", "Index", "Orders", new { area = "Admin" }, null)</li>
+                    <li>@Html.ActionLink("Tài khoản", "Index", "Users", new { area = "Admin" }, null)</li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("Xem trang Web", "Index", "Home", new { area = "" }, new { target = "_blank" })</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer class="text-center text-muted" style="margin-top: 30px; margin-bottom: 20px;">
+            <p>&copy; @DateTime.Now.Year - Hệ thống Quản trị Website Bán hàng MyStore</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

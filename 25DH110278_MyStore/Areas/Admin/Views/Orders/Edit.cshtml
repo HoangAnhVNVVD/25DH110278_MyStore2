@@ -1,0 +1,76 @@
+﻿﻿@model _25DH110278_MyStore.Models.Order
+
+@{
+    ViewBag.Title = "Cập nhật Đơn hàng #" + Model.OrderID;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">CẬP NHẬT ĐƠN HÀNG #@Model.OrderID</h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.OrderID)
+                @Html.HiddenFor(model => model.CustomerID)
+                @Html.HiddenFor(model => model.OrderDate)
+                @Html.HiddenFor(model => model.TotalAmount)
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Khách hàng</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" value="@(Model.Customer != null ? Model.Customer.CustomerName : "N/A")" disabled="disabled" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Ngày đặt</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" value="@Model.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")" disabled="disabled" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Tổng số tiền</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" value="@Model.TotalAmount.ToString("N0") đ" disabled="disabled" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Trạng thái thanh toán</label>
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.PaymentStatus, new List<SelectListItem>
+                        {
+                            new SelectListItem { Text = "Chưa thanh toán", Value = "Chưa thanh toán" },
+                            new SelectListItem { Text = "Đã thanh toán", Value = "Đã thanh toán" },
+                            new SelectListItem { Text = "Đang giao hàng", Value = "Đang giao hàng" },
+                            new SelectListItem { Text = "Hoàn thành", Value = "Hoàn thành" },
+                            new SelectListItem { Text = "Đã hủy", Value = "Đã hủy" }
+                        }, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PaymentStatus, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Địa chỉ giao hàng</label>
+                    <div class="col-md-8">
+                        @Html.TextAreaFor(model => model.AddressDelivery, new { @class = "form-control", rows = 3 })
+                        @Html.ValidationMessageFor(model => model.AddressDelivery, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-8">
+                        <input type="submit" value="Lưu cập nhật" class="btn btn-primary" />
+                        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-default" })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

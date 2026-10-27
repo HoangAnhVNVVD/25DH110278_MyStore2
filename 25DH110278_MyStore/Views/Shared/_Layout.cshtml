@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - CỬA HÀNG TRỰC TUYẾN MYSTORE</title>
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        body {
+            padding-top: 70px;
+            background-color: #f5f6fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .navbar-custom {
+            background-color: #1e3799;
+            border-color: #0c2461;
+        }
+        .navbar-custom .navbar-brand {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .navbar-custom .navbar-nav > li > a {
+            color: #dcdde1;
+        }
+        .navbar-custom .navbar-nav > li > a:hover,
+        .navbar-custom .navbar-nav > li > a:focus {
+            color: #ffffff;
+            background-color: #0c2461;
+        }
+        .product-card {
+            background: #fff;
+            border: 1px solid #e1e2e6;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .product-img-box {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            overflow: hidden;
+        }
+        .product-img-box img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: cover;
+        }
+        .product-body {
+            padding: 15px;
+        }
+        .product-title {
+            font-size: 15px;
+            font-weight: 600;
+            height: 42px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: 10px;
+        }
+        .product-price {
+            color: #e74c3c;
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .category-sidebar {
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e1e2e6;
+            margin-bottom: 20px;
+        }
+        .category-sidebar .list-group-item.active {
+            background-color: #1e3799;
+            border-color: #1e3799;
+        }
+        .badge-cart {
+            background-color: #e74c3c;
+            color: #fff;
+            border-radius: 10px;
+            padding: 3px 7px;
+            font-size: 12px;
+            margin-left: 3px;
+        }
+    </style>
+</head>
+<body>
+    @{
+        var cart = Session["Cart"] as _25DH110278_MyStore.Models.Cart;
+        int cartCount = cart != null ? cart.TotalQuantity() : 0;
+        var personalMenu = new _25DH110278_MyStore.Models.ViewModel.PersonalMenuVM
+        {
+            IsLoggedIn = Session["Username"] != null,
+            Username = Session["Username"] != null ? Session["Username"].ToString() : "",
+            CustomerName = Session["CustomerName"] != null ? Session["CustomerName"].ToString() : "",
+            UserRole = Session["UserRole"] != null ? Session["UserRole"].ToString() : "",
+            CartCount = cartCount
+        };
+    }
+    <div class="navbar navbar-custom navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("MY STORE", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Trang chủ", "Index", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Sản phẩm", "ProductList", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Giới thiệu", "About", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Liên hệ", "Contact", "Home", new { area = "" }, null)</li>
+                </ul>
+                @Html.Partial("_PersonalMenuPV", personalMenu)
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer class="text-center text-muted" style="margin-top: 30px; margin-bottom: 20px;">
+            <p>&copy; @DateTime.Now.Year - Website Thương mại Điện tử MyStore - Khoa CNTT HUFLIT</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

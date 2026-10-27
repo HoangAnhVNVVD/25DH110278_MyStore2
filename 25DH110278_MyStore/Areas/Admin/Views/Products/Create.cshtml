@@ -1,0 +1,22 @@
+﻿﻿@model _25DH110278_MyStore.Models.Product
+
+@{
+    ViewBag.Title = "Thêm mới sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">THÊM MỚI SẢN PHẨM</h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.Partial("PVCreateEditProduct", Model)
+            </div>
+        }
+    </div>
+</div>

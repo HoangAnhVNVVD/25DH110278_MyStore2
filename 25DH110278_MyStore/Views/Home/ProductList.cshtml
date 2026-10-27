@@ -1,0 +1,91 @@
+﻿@model PagedList.IPagedList<_25DH110278_MyStore.Models.Product>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = ViewBag.CurrentCategoryName ?? "Danh sách sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var categories = ViewBag.Categories as IEnumerable<_25DH110278_MyStore.Models.Category>;
+    int? currentCat = ViewBag.CategoryID as int?;
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.Partial("_CategoriesPV", categories)
+    </div>
+    <div class="col-md-9">
+        <div class="well well-sm" style="background: #fff; border: 1px solid #e1e2e6;">
+            <div class="row">
+                <div class="col-sm-8" style="padding-top: 6px;">
+                    <span style="font-size: 16px; font-weight: bold; color: #2c3e50;">
+                        @(ViewBag.CurrentCategoryName ?? "Tất cả sản phẩm")
+                    </span>
+                    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm as string))
+                    {
+                        <span class="text-muted"> - Từ khóa: "@ViewBag.SearchTerm"</span>
+                    }
+                </div>
+                <div class="col-sm-4 text-right text-muted" style="padding-top: 6px;">
+                    Tổng số @Model.TotalItemCount sản phẩm
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <div class="col-md-4 col-sm-6">
+                        <div class="product-card">
+                            <div class="product-img-box">
+                                <a href="@Url.Action("ProductDetail", "Home", new { id = item.ProductID })">
+                                    @if (!string.IsNullOrEmpty(item.ProductImage))
+                                    {
+                                        var imgSrc = (item.ProductImage.StartsWith("~") || item.ProductImage.StartsWith("/")) ? item.ProductImage : "~/Content/images/" + item.ProductImage;
+                                        <img src="@Url.Content(imgSrc)" alt="@item.ProductName" onerror="this.onerror=null;this.src='@Url.Content("~/Content/images/default_img.png")';" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Url.Content("~/Content/images/default_img.png")" alt="Default" />
+                                    }
+                                </a>
+                            </div>
+                            <div class="product-body">
+                                <div class="product-title" title="@item.ProductName">
+                                    <a href="@Url.Action("ProductDetail", "Home", new { id = item.ProductID })" style="color: #2c3e50; text-decoration: none;">
+                                        @item.ProductName
+                                    </a>
+                                </div>
+                                <div class="product-price">
+                                    @item.ProductPrice.ToString("N0") VNĐ
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6" style="padding-right: 4px;">
+                                        <a href="@Url.Action("ProductDetail", "Home", new { id = item.ProductID })" class="btn btn-default btn-block btn-sm">
+                                            Chi tiết
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-6" style="padding-left: 4px;">
+                                        <a href="@Url.Action("AddToCart", "Cart", new { id = item.ProductID })" class="btn btn-primary btn-block btn-sm">
+                                            + Giỏ
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-md-12 text-center" style="padding: 50px 20px; background: #fff; border-radius: 8px;">
+                    <p class="text-muted" style="font-size: 16px;">Không tìm thấy sản phẩm nào.</p>
+                </div>
+            }
+        </div>
+
+        <div class="text-center">
+            @Html.PagedListPager(Model, page => Url.Action("ProductList", new { page, categoryId = currentCat, searchTerm = ViewBag.SearchTerm }))
+        </div>
+    </div>
+</div>

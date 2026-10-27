@@ -1,0 +1,104 @@
+﻿﻿@model PagedList.IPagedList<_25DH110278_MyStore.Models.Order>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Quản lý Đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="font-size: 18px;">DANH SÁCH ĐƠN HÀNG</h3>
+    </div>
+    <div class="panel-body">
+        <div class="well well-sm">
+            @using (Html.BeginForm("Index", "Orders", FormMethod.Get, new { @class = "form-inline" }))
+            {
+                <div class="form-group" style="margin-right: 10px;">
+                    <label>Tìm kiếm: </label>
+                    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control" placeholder="Mã ĐH, Tên khách hàng, Địa chỉ..." style="width: 250px;" />
+                </div>
+
+                <div class="form-group" style="margin-right: 10px;">
+                    <label>Trạng thái: </label>
+                    <select name="statusFilter" class="form-control">
+                        <option value="">-- Tất cả trạng thái --</option>
+                        <option value="Chưa thanh toán" @(ViewBag.StatusFilter == "Chưa thanh toán" ? "selected" : "")>Chưa thanh toán</option>
+                        <option value="Đã thanh toán" @(ViewBag.StatusFilter == "Đã thanh toán" ? "selected" : "")>Đã thanh toán</option>
+                        <option value="Đã hủy" @(ViewBag.StatusFilter == "Đã hủy" ? "selected" : "")>Đã hủy</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lọc đơn hàng</button>
+                @Html.ActionLink("Đặt lại", "Index", null, new { @class = "btn btn-default" })
+            }
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr class="info">
+                        <th style="width: 80px;">Mã ĐH</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
+                        <th style="text-align: right;">Tổng số tiền</th>
+                        <th style="text-align: center;">Trạng thái</th>
+                        <th>Địa chỉ giao hàng</th>
+                        <th style="width: 180px; text-align: center;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><strong>#@item.OrderID</strong></td>
+                                <td>@(item.Customer != null ? item.Customer.CustomerName : "N/A")</td>
+                                <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td style="text-align: right;"><strong class="text-danger">@item.TotalAmount.ToString("N0") đ</strong></td>
+                                <td style="text-align: center;">
+                                    @if (item.PaymentStatus == "Đã thanh toán")
+                                    {
+                                        <span class="label label-success">Đã thanh toán</span>
+                                    }
+                                    else if (item.PaymentStatus == "Đã hủy")
+                                    {
+                                        <span class="label label-danger">Đã hủy</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-warning">@(item.PaymentStatus ?? "Chờ xử lý")</span>
+                                    }
+                                </td>
+                                <td>@item.AddressDelivery</td>
+                                <td style="text-align: center;">
+                                    @Html.ActionLink("Xem", "Details", new { id = item.OrderID }, new { @class = "btn btn-info btn-xs" })
+                                    @Html.ActionLink("Sửa", "Edit", new { id = item.OrderID }, new { @class = "btn btn-primary btn-xs" })
+                                    @Html.ActionLink("Xóa", "Delete", new { id = item.OrderID }, new { @class = "btn btn-danger btn-xs" })
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted" style="padding: 20px;">
+                                Không có đơn hàng nào phù hợp.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6" style="padding-top: 15px;">
+                Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount (Tổng số @Model.TotalItemCount đơn hàng)
+            </div>
+            <div class="col-md-6 text-right">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchTerm = ViewBag.SearchTerm, statusFilter = ViewBag.StatusFilter }))
+            </div>
+        </div>
+    </div>
+</div>

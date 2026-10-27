@@ -1,0 +1,47 @@
+﻿@model IEnumerable<_25DH110278_MyStore.Models.Product>
+
+@if (Model != null && Model.Any())
+{
+    <div class="panel panel-default" style="border-radius: 8px; margin-top: 25px;">
+        <div class="panel-heading" style="font-weight: bold; font-size: 16px; background-color: #fcf8e3; color: #8a6d3b;">
+            <i class="glyphicon glyphicon-tags"></i> TOP DEALS - BÁN CHẠY NHẤT CÙNG DANH MỤC
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                @foreach (var item in Model.Take(4))
+                {
+                    <div class="col-md-3 col-sm-6">
+                        <div class="product-card">
+                            <div class="product-img-box">
+                                <a href="@Url.Action("ProductDetail", "Home", new { id = item.ProductID })">
+                                    @if (!string.IsNullOrEmpty(item.ProductImage))
+                                    {
+                                        var imgSrc = (item.ProductImage.StartsWith("~") || item.ProductImage.StartsWith("/")) ? item.ProductImage : "~/Content/images/" + item.ProductImage;
+                                        <img src="@Url.Content(imgSrc)" alt="@item.ProductName" onerror="this.onerror=null;this.src='@Url.Content("~/Content/images/default_img.png")';" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Url.Content("~/Content/images/default_img.png")" alt="Default" />
+                                    }
+                                </a>
+                            </div>
+                            <div class="product-body">
+                                <div class="product-title" title="@item.ProductName">
+                                    <a href="@Url.Action("ProductDetail", "Home", new { id = item.ProductID })" style="color: #2c3e50; text-decoration: none;">
+                                        @item.ProductName
+                                    </a>
+                                </div>
+                                <div class="product-price">
+                                    @item.ProductPrice.ToString("N0") đ
+                                </div>
+                                <a href="@Url.Action("AddToCart", "Cart", new { id = item.ProductID })" class="btn btn-primary btn-block btn-sm">
+                                    + Giỏ hàng
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

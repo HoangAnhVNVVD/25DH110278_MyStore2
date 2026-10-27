@@ -1,0 +1,40 @@
+﻿﻿@model _25DH110278_MyStore.Models.Order
+
+@{
+    ViewBag.Title = "Xóa Đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <h3 class="panel-title">XÁC NHẬN XÓA ĐƠN HÀNG #@Model.OrderID</h3>
+    </div>
+    <div class="panel-body">
+        <h4 class="text-danger">Bạn có chắc chắn muốn xóa đơn hàng này và các chi tiết liên quan?</h4>
+        <dl class="dl-horizontal">
+            <dt>Mã đơn hàng</dt>
+            <dd>#@Model.OrderID</dd>
+
+            <dt>Khách hàng</dt>
+            <dd><strong>@(Model.Customer != null ? Model.Customer.CustomerName : "N/A")</strong></dd>
+
+            <dt>Ngày đặt</dt>
+            <dd>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt>Tổng tiền</dt>
+            <dd><strong class="text-danger">@Model.TotalAmount.ToString("N0") đ</strong></dd>
+
+            <dt>Trạng thái</dt>
+            <dd><span class="label label-warning">@Model.PaymentStatus</span></dd>
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-actions no-color">
+                <input type="submit" value="Xác nhận xóa" class="btn btn-danger" />
+                @Html.ActionLink("Hủy bỏ và quay lại", "Index", null, new { @class = "btn btn-default" })
+            </div>
+        }
+    </div>
+</div>

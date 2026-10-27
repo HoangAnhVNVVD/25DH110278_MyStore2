@@ -1,0 +1,84 @@
+﻿﻿@model _25DH110278_MyStore.Models.Customer
+
+@{
+    ViewBag.Title = "Chi tiết Khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">THÔNG TIN KHÁCH HÀNG: @Model.CustomerName</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="dl-horizontal">
+                    <dt>Mã khách hàng</dt>
+                    <dd>@Model.CustomerID</dd>
+
+                    <dt>Họ và tên</dt>
+                    <dd><strong>@Model.CustomerName</strong></dd>
+
+                    <dt>Số điện thoại</dt>
+                    <dd>@Model.CustomerPhone</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="dl-horizontal">
+                    <dt>Email</dt>
+                    <dd>@Model.CustomerEmail</dd>
+
+                    <dt>Địa chỉ</dt>
+                    <dd>@Model.CustomerAddress</dd>
+
+                    <dt>Tài khoản liên kết</dt>
+                    <dd><span class="label label-primary">@Model.Username</span></dd>
+                </dl>
+            </div>
+        </div>
+
+        <hr />
+        <h4>Lịch sử Đơn hàng đã đặt (@(Model.Orders != null ? Model.Orders.Count : 0) đơn hàng)</h4>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr class="active">
+                    <th>Mã ĐH</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Địa chỉ nhận hàng</th>
+                    <th style="text-align: center;">Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Orders != null && Model.Orders.Any())
+                {
+                    foreach (var order in Model.Orders.OrderByDescending(o => o.OrderDate))
+                    {
+                        <tr>
+                            <td>#@order.OrderID</td>
+                            <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td><strong class="text-danger">@order.TotalAmount.ToString("N0") đ</strong></td>
+                            <td><span class="label label-success">@order.PaymentStatus</span></td>
+                            <td>@order.AddressDelivery</td>
+                            <td style="text-align: center;">
+                                @Html.ActionLink("Xem Đơn", "Details", "Orders", new { id = order.OrderID }, new { @class = "btn btn-info btn-xs" })
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Khách hàng chưa phát sinh đơn hàng nào.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <p style="margin-top: 20px;">
+            @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.CustomerID }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-default" })
+        </p>
+    </div>
+</div>

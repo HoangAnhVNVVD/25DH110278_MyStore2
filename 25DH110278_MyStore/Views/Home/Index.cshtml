@@ -1,0 +1,50 @@
+﻿﻿@model _25DH110278_MyStore.Models.ViewModel.HomeProductVM
+
+@{
+    ViewBag.Title = "Trang chủ - MyStore";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.Partial("_CategoriesPV", Model.Categories)
+
+        <div class="panel panel-default">
+            <div class="panel-heading" style="font-weight: bold;">
+                <i class="glyphicon glyphicon-search"></i> TÌM KIẾM NHANH
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+                {
+                    if (Model.CategoryID.HasValue)
+                    {
+                        <input type="hidden" name="categoryId" value="@Model.CategoryID.Value" />
+                    }
+                    <div class="form-group">
+                        <input type="text" name="searchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Tên sản phẩm, mô tả..." />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Tìm kiếm</button>
+                    if (!string.IsNullOrEmpty(Model.SearchTerm))
+                    {
+                        <a href="@Url.Action("Index", "Home", new { categoryId = Model.CategoryID })" class="btn btn-default btn-block" style="margin-top: 5px;">Hủy tìm</a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="jumbotron" style="padding: 30px 25px; background: linear-gradient(135deg, #1e3799 0%, #4a69bd 100%); color: #fff; border-radius: 8px; margin-bottom: 25px;">
+            <h1 style="font-size: 32px; font-weight: bold; margin-top: 0;">CHÀO MỪNG ĐẾN VỚI MYSTORE</h1>
+            <p style="font-size: 16px; margin-bottom: 15px;">Hệ thống mua sắm trực tuyến hàng đầu - Đa dạng sản phẩm, ưu đãi mỗi ngày.</p>
+            <a href="@Url.Action("ProductList", "Home")" class="btn btn-warning btn-lg">Xem tất cả sản phẩm →</a>
+        </div>
+
+        @if (Model.FeaturedProducts != null && Model.FeaturedProducts.Any())
+        {
+            @Html.Partial("_PVFeatureProduct", Model.FeaturedProducts)
+        }
+
+        @Html.Partial("_PVNewProduct", Model.NewProducts)
+    </div>
+</div>

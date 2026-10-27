@@ -1,0 +1,94 @@
+﻿﻿@model _25DH110278_MyStore.Models.Order
+
+@{
+    ViewBag.Title = "Chi tiết Đơn hàng #" + Model.OrderID;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="font-size: 18px;">CHI TIẾT ĐƠN HÀNG #@Model.OrderID</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Thông tin Người đặt</h4>
+                <dl class="dl-horizontal">
+                    <dt>Tên khách hàng</dt>
+                    <dd><strong>@(Model.Customer != null ? Model.Customer.CustomerName : "N/A")</strong></dd>
+
+                    <dt>Số điện thoại</dt>
+                    <dd>@(Model.Customer != null ? Model.Customer.CustomerPhone : "N/A")</dd>
+
+                    <dt>Email</dt>
+                    <dd>@(Model.Customer != null ? Model.Customer.CustomerEmail : "N/A")</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <h4>Thông tin Đơn hàng</h4>
+                <dl class="dl-horizontal">
+                    <dt>Ngày đặt</dt>
+                    <dd>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")</dd>
+
+                    <dt>Trạng thái</dt>
+                    <dd><span class="label label-success" style="font-size: 13px;">@Model.PaymentStatus</span></dd>
+
+                    <dt>Địa chỉ giao</dt>
+                    <dd>@Model.AddressDelivery</dd>
+                </dl>
+            </div>
+        </div>
+
+        <hr />
+        <h4>Danh sách Mặt hàng trong Đơn</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="active">
+                        <th style="width: 80px; text-align: center;">Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th style="width: 140px; text-align: right;">Đơn giá</th>
+                        <th style="width: 100px; text-align: center;">Số lượng</th>
+                        <th style="width: 160px; text-align: right;">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                    {
+                        foreach (var detail in Model.OrderDetails)
+                        {
+                            var lineTotal = detail.Quantity * detail.UnitPrice;
+                            <tr>
+                                <td style="text-align: center;">
+                                    @if (detail.Product != null && !string.IsNullOrEmpty(detail.Product.ProductImage))
+                                    {
+                                        <img src="@Url.Content(detail.Product.ProductImage)" alt="" class="img-thumbnail-table" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Url.Content("~/Content/images/default_img.png")" alt="" class="img-thumbnail-table" />
+                                    }
+                                </td>
+                                <td><strong>@(detail.Product != null ? detail.Product.ProductName : "Sản phẩm #" + detail.ProductID)</strong></td>
+                                <td style="text-align: right;">@detail.UnitPrice.ToString("N0") đ</td>
+                                <td style="text-align: center;"><strong>@detail.Quantity</strong></td>
+                                <td style="text-align: right;"><strong class="text-danger">@lineTotal.ToString("N0") đ</strong></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="info">
+                        <th colspan="4" style="text-align: right; font-size: 16px;">TỔNG TIỀN THANH TOÁN:</th>
+                        <th style="text-align: right; font-size: 18px; color: #d9534f;">@Model.TotalAmount.ToString("N0") VNĐ</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <p style="margin-top: 20px;">
+            @Html.ActionLink("Chỉnh sửa đơn hàng", "Edit", new { id = Model.OrderID }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-default" })
+        </p>
+    </div>
+</div>

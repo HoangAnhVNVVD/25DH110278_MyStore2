@@ -1,0 +1,101 @@
+﻿﻿@model _25DH110278_MyStore.Models.ViewModel.CheckoutVM
+
+@{
+    ViewBag.Title = "Thanh toán đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var cart = ViewBag.Cart as _25DH110278_MyStore.Models.Cart;
+}
+
+<div class="row" style="margin-top: 15px;">
+    <div class="col-md-7">
+        <div class="panel panel-primary" style="border-radius: 8px;">
+            <div class="panel-heading" style="font-weight: bold; font-size: 16px;">
+                THÔNG TIN GIAO HÀNG & THANH TOÁN
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Checkout", "Order", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        <label>Họ và tên người nhận (*)</label>
+                        @Html.EditorFor(m => m.ReceiverName, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập họ tên người nhận..." } })
+                        @Html.ValidationMessageFor(m => m.ReceiverName, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label>Số điện thoại liên lạc (*)</label>
+                        @Html.EditorFor(m => m.ReceiverPhone, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập số điện thoại..." } })
+                        @Html.ValidationMessageFor(m => m.ReceiverPhone, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ nhận hàng (*)</label>
+                        @Html.TextAreaFor(m => m.AddressDelivery, new { @class = "form-control", rows = 3, placeholder = "Địa chỉ nhận hàng chi tiết..." })
+                        @Html.ValidationMessageFor(m => m.AddressDelivery, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phương thức giao hàng</label>
+                        <select name="deliveryMethod" class="form-control">
+                            <option value="Giao hàng tiêu chuẩn">Giao hàng tiêu chuẩn (2-3 ngày)</option>
+                            <option value="Giao hàng nhanh">Giao hàng hỏa tốc (24h)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phương thức thanh toán</label>
+                        <select name="paymentMethod" class="form-control">
+                            <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                            <option value="Chuyển khoản">Chuyển khoản ngân hàng</option>
+                            <option value="PayPal">Thanh toán trực tuyến PayPal</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg btn-block" style="margin-top: 20px;">
+                        XÁC NHẬN VÀ ĐẶT HÀNG
+                    </button>
+                    <a href="@Url.Action("Index", "Cart")" class="btn btn-default btn-block" style="margin-top: 10px;">
+                        Quay lại giỏ hàng
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="panel panel-default" style="border-radius: 8px;">
+            <div class="panel-heading" style="font-weight: bold; font-size: 16px; background-color: #f1f2f6;">
+                TÓM TẮT ĐƠN HÀNG
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <table class="table" style="margin-bottom: 0;">
+                    <tbody>
+                        @if (cart != null)
+                        {
+                            foreach (var item in cart.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@item.ProductName</strong>
+                                        <div class="text-muted" style="font-size: 13px;">SL: @item.Quantity x @item.UnitPrice.ToString("N0") đ</div>
+                                    </td>
+                                    <td class="text-right" style="vertical-align: middle;">
+                                        <strong class="text-danger">@item.TotalPrice.ToString("N0") đ</strong>
+                                    </td>
+                                </tr>
+                            }
+                            <tr class="active">
+                                <td><strong>TỔNG TIỀN:</strong></td>
+                                <td class="text-right">
+                                    <strong class="text-danger" style="font-size: 18px;">@cart.TotalAmount().ToString("N0") VNĐ</strong>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

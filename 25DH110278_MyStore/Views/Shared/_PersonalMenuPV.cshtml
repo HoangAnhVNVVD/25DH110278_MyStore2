@@ -1,0 +1,49 @@
+﻿﻿@model _25DH110278_MyStore.Models.ViewModel.PersonalMenuVM
+
+<ul class="nav navbar-nav navbar-right">
+    <li>
+        <a href="@Url.Action("Index", "Cart")">
+            <i class="glyphicon glyphicon-shopping-cart"></i> Giỏ hàng
+            <span class="badge-cart">@Model.CartCount</span>
+        </a>
+    </li>
+    @if (Model.IsLoggedIn)
+    {
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                <i class="glyphicon glyphicon-user"></i> Hello, @Model.CustomerName <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Thông tin tài khoản", "ProfileInfo", "Account")</li>
+                <li>@Html.ActionLink("Lịch sử mua hàng", "MyOrder", "Order")</li>
+                @if (Model.UserRole == "A" || Model.UserRole == "Admin")
+                {
+                    <li class="divider"></li>
+                    <li>@Html.ActionLink("Quản trị hệ thống", "Index", "Home", new { area = "Admin" }, null)</li>
+                }
+                <li class="divider"></li>
+                <li>@Html.ActionLink("Đăng xuất", "Logout", "Account")</li>
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                <i class="glyphicon glyphicon-user"></i> Tài khoản <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Đăng nhập", "Login", "Account")</li>
+                <li>@Html.ActionLink("Đăng ký", "Register", "Account")</li>
+            </ul>
+        </li>
+    }
+    @if (Model.IsLoggedIn && (Model.UserRole == "A" || Model.UserRole == "Admin"))
+    {
+        <li>@Html.ActionLink("Trang Quản trị", "Index", "Home", new { area = "Admin" }, new { style = "background-color: #e67e22; color: #fff; border-radius: 4px; margin-top: 7px; padding: 8px 15px;" })</li>
+    }
+    else
+    {
+        <li>@Html.ActionLink("Admin", "Login", "Account", null, new { style = "background-color: #34495e; color: #fff; border-radius: 4px; margin-top: 7px; padding: 8px 12px;" })</li>
+    }
+</ul>

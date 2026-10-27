@@ -1,0 +1,73 @@
+﻿﻿@model _25DH110278_MyStore.Models.Order
+
+@{
+    ViewBag.Title = "Đặt hàng thành công";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel panel-success text-center" style="border-radius: 8px; margin-top: 30px; padding: 30px;">
+    <div style="font-size: 60px; color: #5cb85c;">
+        <i class="glyphicon glyphicon-ok-circle"></i>
+    </div>
+    <h2 style="color: #27ae60; font-weight: bold; margin-top: 10px;">ĐẶT HÀNG THÀNH CÔNG!</h2>
+    <p style="font-size: 16px; color: #555;">
+        Cảm ơn quý khách đã mua sắm tại <strong>MyStore</strong>. Mã đơn hàng của bạn là: <strong class="text-danger">#@Model.OrderID</strong>
+    </p>
+
+    <div class="row text-left" style="max-width: 650px; margin: 30px auto; background: #fafafa; border: 1px solid #eee; padding: 20px; border-radius: 6px;">
+        <dl class="dl-horizontal" style="margin-bottom: 15px;">
+            <dt>Người nhận</dt>
+            <dd>@(Model.Customer != null ? Model.Customer.CustomerName : "N/A")</dd>
+
+            <dt>Số điện thoại</dt>
+            <dd>@(Model.Customer != null ? Model.Customer.CustomerPhone : "N/A")</dd>
+
+            <dt>Địa chỉ giao</dt>
+            <dd>@Model.AddressDelivery</dd>
+
+            <dt>Ngày đặt</dt>
+            <dd>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt>Trạng thái</dt>
+            <dd><span class="label label-warning">@Model.PaymentStatus</span></dd>
+        </dl>
+
+        <h4>Chi tiết các mặt hàng:</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr class="active">
+                    <th>Tên sản phẩm</th>
+                    <th style="width: 100px; text-align: center;">SL</th>
+                    <th style="width: 130px; text-align: right;">Đơn giá</th>
+                    <th style="width: 140px; text-align: right;">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in Model.OrderDetails)
+                {
+                    <tr>
+                        <td>@(d.Product != null ? d.Product.ProductName : "SP #" + d.ProductID)</td>
+                        <td style="text-align: center;">@d.Quantity</td>
+                        <td style="text-align: right;">@d.UnitPrice.ToString("N0") đ</td>
+                        <td style="text-align: right;"><strong class="text-danger">@((d.Quantity * d.UnitPrice).ToString("N0")) đ</strong></td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="info">
+                    <th colspan="3" style="text-align: right;">TỔNG CỘNG:</th>
+                    <th style="text-align: right; color: #d9534f; font-size: 16px;">@Model.TotalAmount.ToString("N0") VNĐ</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <p>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg">
+            Tiếp tục mua hàng
+        </a>
+        <a href="@Url.Action("MyOrder", "Order")" class="btn btn-default btn-lg" style="margin-left: 10px;">
+            Xem lịch sử đơn hàng
+        </a>
+    </p>
+</div>
